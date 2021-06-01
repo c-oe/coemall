@@ -56,9 +56,9 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.loadbalancer</groupId>
-            <artifactId>load-balancer</artifactId>
-            <version>3.2-b06</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-loadbalancer</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 
