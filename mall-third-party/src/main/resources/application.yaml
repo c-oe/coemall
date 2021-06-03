@@ -8,8 +8,8 @@ spring:
       secret-key: XelHrm0Ph4iNtLcCXOxtk7GvFY6tYR
       oss:
         endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: coemall
   application:
     name: mall-third-party
-
 server:
-  port: 30000
+  port: 12000
