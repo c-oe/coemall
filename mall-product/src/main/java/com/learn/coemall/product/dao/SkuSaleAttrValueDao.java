@@ -6,12 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * sku销售属性&值
- * 
+ *
  * @author coffee
  * @email coffee@gmail.com
  * @date 2021-05-31 12:41:21
  */
 @Mapper
 public interface SkuSaleAttrValueDao extends BaseMapper<SkuSaleAttrValueEntity> {
-	
+
 }

@@ -5,11 +5,17 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+#      逻辑删除：
+#        1.配置全局的逻辑删除规则（可省略）
+#        2.配置逻辑删除的组件Bean（3.1.0后可省略）
+#        3.加上逻辑删除注解@TableLogic
 spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.80.130:3306/mall_pms
+    url: jdbc:mysql://192.168.80.132:3306/mall_pms
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:

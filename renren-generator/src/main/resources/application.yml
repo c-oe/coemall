@@ -7,7 +7,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.80.130:3306/mall_wms
+    url: jdbc:mysql://192.168.80.132:3306/mall_pms
     username: root
     password: root
     #oracle配置

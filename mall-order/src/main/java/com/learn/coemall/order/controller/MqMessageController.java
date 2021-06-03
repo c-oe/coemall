@@ -16,10 +16,7 @@ import com.learn.common.utils.PageUtils;
 import com.learn.common.utils.R;
 
 
-
 /**
- * 
- *
  * @author coffee
  * @email coffee@gmail.com
  * @date 2021-05-31 15:34:09
@@ -34,7 +31,7 @@ public class MqMessageController {
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = mqMessageService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -45,8 +42,8 @@ public class MqMessageController {
      * 信息
      */
     @RequestMapping("/info/{messageId}")
-    public R info(@PathVariable("messageId") String messageId){
-		MqMessageEntity mqMessage = mqMessageService.getById(messageId);
+    public R info(@PathVariable("messageId") String messageId) {
+        MqMessageEntity mqMessage = mqMessageService.getById(messageId);
 
         return R.ok().put("mqMessage", mqMessage);
     }
@@ -55,8 +52,8 @@ public class MqMessageController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody MqMessageEntity mqMessage){
-		mqMessageService.save(mqMessage);
+    public R save(@RequestBody MqMessageEntity mqMessage) {
+        mqMessageService.save(mqMessage);
 
         return R.ok();
     }
@@ -65,8 +62,8 @@ public class MqMessageController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody MqMessageEntity mqMessage){
-		mqMessageService.updateById(mqMessage);
+    public R update(@RequestBody MqMessageEntity mqMessage) {
+        mqMessageService.updateById(mqMessage);
 
         return R.ok();
     }
@@ -75,8 +72,8 @@ public class MqMessageController {
      * 删除
      */
     @RequestMapping("/delete")
-    public R delete(@RequestBody String[] messageIds){
-		mqMessageService.removeByIds(Arrays.asList(messageIds));
+    public R delete(@RequestBody String[] messageIds) {
+        mqMessageService.removeByIds(Arrays.asList(messageIds));
 
         return R.ok();
     }

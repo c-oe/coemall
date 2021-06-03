@@ -3,7 +3,7 @@
 
 <mapper namespace="com.learn.coemall.coupon.dao.CouponSpuCategoryRelationDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.learn.coemall.coupon.entity.CouponSpuCategoryRelationEntity" id="couponSpuCategoryRelationMap">
         <result property="id" column="id"/>
         <result property="couponId" column="coupon_id"/>

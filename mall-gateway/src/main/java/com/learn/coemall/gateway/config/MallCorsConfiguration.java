@@ -14,7 +14,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 public class MallCorsConfiguration {
 
     @Bean
-    public CorsWebFilter corsWebFilter(){
+    public CorsWebFilter corsWebFilter() {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
@@ -25,7 +25,7 @@ public class MallCorsConfiguration {
         corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.setAllowCredentials(true);
 
-        source.registerCorsConfiguration("/**",corsConfiguration);
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsWebFilter(source);
     }

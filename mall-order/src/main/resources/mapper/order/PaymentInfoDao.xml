@@ -3,7 +3,7 @@
 
 <mapper namespace="com.learn.coemall.order.dao.PaymentInfoDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.learn.coemall.order.entity.PaymentInfoEntity" id="paymentInfoMap">
         <result property="id" column="id"/>
         <result property="orderSn" column="order_sn"/>
