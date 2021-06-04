@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@ComponentScan("com.learn.coemall")
 public class MallWareApplication {
 
     public static void main(String[] args) {

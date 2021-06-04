@@ -25,7 +25,8 @@ import com.learn.common.utils.R;
  */
 @RestController
 @RequestMapping("member/memberlevel")
-public class MemberLevelController {
+public class
+MemberLevelController {
     @Autowired
     private MemberLevelService memberLevelService;
 

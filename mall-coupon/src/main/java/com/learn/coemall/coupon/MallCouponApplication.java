@@ -8,8 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
-@ComponentScan("com.learn.coemall")
 public class MallCouponApplication {
 
     public static void main(String[] args) {

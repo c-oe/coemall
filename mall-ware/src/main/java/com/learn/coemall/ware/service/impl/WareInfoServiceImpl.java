@@ -13,6 +13,7 @@ import com.learn.common.utils.Query;
 import com.learn.coemall.ware.dao.WareInfoDao;
 import com.learn.coemall.ware.entity.WareInfoEntity;
 import com.learn.coemall.ware.service.WareInfoService;
+import org.springframework.util.StringUtils;
 
 
 @Service("wareInfoService")
@@ -20,10 +21,17 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<WareInfoEntity> page = this.page(
-                new Query<WareInfoEntity>().getPage(params),
-                new QueryWrapper<WareInfoEntity>()
-        );
+        QueryWrapper<WareInfoEntity> queryWrapper = new QueryWrapper<>();
+
+        String key = (String) params.get("key");
+        if (StringUtils.hasLength(key)){
+            queryWrapper.eq("id",key)
+                    .or().like("name",key)
+                    .or().like("address",key)
+                    .or().like("areacode",key);
+        }
+
+        IPage<WareInfoEntity> page = this.page(new Query<WareInfoEntity>().getPage(params), queryWrapper);
 
         return new PageUtils(page);
     }

@@ -1,8 +1,14 @@
 package com.learn.coemall.product.service.impl;
 
+import com.learn.coemall.product.service.AttrService;
+import com.learn.coemall.product.vo.AttrGroupWithAttrsVo;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,6 +24,9 @@ import org.springframework.util.StringUtils;
 
 @Service("attrGroupService")
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEntity> implements AttrGroupService {
+
+    @Autowired
+    private AttrService attrService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -50,6 +59,24 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
                     queryWrapper);
             return new PageUtils(page);
         }
+    }
+
+    /**
+     * 根据分类id查出所有的分组以及这些组里面的属性
+     */
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
+
+        //查询分组信息
+        List<AttrGroupEntity> attrGroupEntities = list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        //查询所有属性
+        return attrGroupEntities.stream().map(group -> {
+            AttrGroupWithAttrsVo attrsVo = new AttrGroupWithAttrsVo();
+            BeanUtils.copyProperties(group,attrsVo);
+            attrsVo.setAttrs(attrService.getRelationAttr(attrsVo.getAttrGroupId()));
+            return attrsVo;
+        }).collect(Collectors.toList());
+
     }
 
 }
