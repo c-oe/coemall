@@ -1,7 +1,11 @@
 package com.learn.coemall.product.service.impl;
 
+import com.learn.coemall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,10 +19,14 @@ import com.learn.common.utils.Query;
 import com.learn.coemall.product.dao.CategoryDao;
 import com.learn.coemall.product.entity.CategoryEntity;
 import com.learn.coemall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -49,6 +57,36 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void removeMenuByIds(List<Long> asList) {
         //TODO 1.检查当前删除的菜单是否被别的地方引用
         baseMapper.deleteBatchIds(asList);
+    }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+
+        List<Long> parentPath = findParentPath(catelogId, new ArrayList<>());
+        Collections.reverse(parentPath);
+
+        return  parentPath.toArray(new Long[0]);
+    }
+
+    /**
+     * 级联更新所有关联的数据
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        baseMapper.updateById(category);
+
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+    }
+
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
+        //收集当前节点id
+        paths.add(catelogId);
+        CategoryEntity id = getById(catelogId);
+        if (id.getParentCid() != 0){
+            findParentPath(id.getParentCid(),paths);
+        }
+        return paths;
     }
 
     //递归查找所有菜单的子菜单
