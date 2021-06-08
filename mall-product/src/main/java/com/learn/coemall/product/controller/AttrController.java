@@ -1,8 +1,11 @@
 package com.learn.coemall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.learn.coemall.product.entity.ProductAttrValueEntity;
+import com.learn.coemall.product.service.ProductAttrValueService;
 import com.learn.coemall.product.vo.AttrRespVo;
 import com.learn.coemall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,17 @@ import com.learn.common.utils.R;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+
+    // /product/attr/base/listforspu/{spuId}
+    @GetMapping("/base/listforspu/{spuId}")
+    public R baseAttrListForSpu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> productAttrValueEntities= productAttrValueService.baseAttrListForSpu(spuId);
+
+        return R.ok().put("data",productAttrValueEntities);
+    }
 
     @GetMapping("/{attrType}/list/{catelogId}")
     public R baseAttrList(@RequestParam Map<String,Object> params,
@@ -63,6 +77,14 @@ public class AttrController {
     public R save(@RequestBody AttrVo attr) {
         attrService.saveAttr(attr);
 
+        return R.ok();
+    }
+
+    // /product/attr/update/{spuId}
+    @RequestMapping("/update/{spuId}")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                            @RequestBody List<ProductAttrValueEntity> entities){
+        productAttrValueService.updateSpuAttr(spuId,entities);
         return R.ok();
     }
 

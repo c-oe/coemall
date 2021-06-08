@@ -2,6 +2,7 @@ package com.learn.coemall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learn.coemall.ware.vo.MergeVo;
+import com.learn.coemall.ware.vo.PurchaseDoneVo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.ware.entity.PurchaseEntity;
 
@@ -24,5 +25,7 @@ public interface PurchaseService extends IService<PurchaseEntity> {
     void mergePurchase(MergeVo mergeVo);
 
     void received(List<Long> ids);
+
+    void done(PurchaseDoneVo doneVo);
 }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.learn.coemall.ware.vo.MergeVo;
+import com.learn.coemall.ware.vo.PurchaseDoneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,13 @@ import com.learn.common.utils.R;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+
+    // /ware/purchase/done
+    @PostMapping("/done")
+    public R done(@RequestBody PurchaseDoneVo doneVo){
+        purchaseService.done(doneVo);
+        return R.ok();
+    }
 
 
     // 领取采购单 /ware/purchase/received
