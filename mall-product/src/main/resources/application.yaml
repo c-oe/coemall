@@ -25,6 +25,8 @@ spring:
     name: mall-product
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
 logging:
   level:
     com.learn.coemall: debug

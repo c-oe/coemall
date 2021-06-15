@@ -1,14 +1,12 @@
 package com.learn.coemall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.learn.common.to.SkuHasStockTo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.learn.coemall.ware.entity.WareSkuEntity;
 import com.learn.coemall.ware.service.WareSkuService;
@@ -28,6 +26,12 @@ import com.learn.common.utils.R;
 public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
+
+    //查询sku是否有库存
+    @PostMapping("/hasstock")
+    public List<SkuHasStockTo> getSkuHasStock(@RequestBody List<Long> skuIds){
+        return wareSkuService.getSkuHasStock(skuIds);
+    }
 
     /**
      * 列表

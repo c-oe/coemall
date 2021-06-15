@@ -1,13 +1,14 @@
 package com.learn.coemall.ware.service.impl;
 
 import com.learn.coemall.ware.feign.ProductFeignService;
+import com.learn.common.to.SkuHasStockTo;
 import com.learn.common.utils.R;
-import org.apache.tomcat.websocket.WsExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -76,6 +77,19 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         }
 
 
+    }
+
+    @Override
+    public List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds) {
+
+        return skuIds.stream().map(skuId -> {
+            SkuHasStockTo stockTo = new SkuHasStockTo();
+            Long count = baseMapper.getSkuStock(skuId);
+            stockTo.setSkuId(skuId);
+            stockTo.setHasStock(count > 0);
+
+            return stockTo;
+        }).collect(Collectors.toList());
     }
 
 }
