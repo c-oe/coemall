@@ -1,6 +1,7 @@
 package com.learn.coemall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learn.coemall.product.vo.Catelog2Vo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.product.entity.CategoryEntity;
 
@@ -30,5 +31,7 @@ public interface CategoryService extends IService<CategoryEntity> {
     void updateCascade(CategoryEntity category);
 
     List<CategoryEntity> getLevel1Categorys();
+
+    Map<String, List<Catelog2Vo>> getCatalogJson();
 }
 

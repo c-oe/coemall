@@ -27,6 +27,8 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
     cache: false
+  redis:
+    host: 192.168.80.133
 logging:
   level:
     com.learn.coemall: debug
