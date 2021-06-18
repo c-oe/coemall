@@ -58,10 +58,10 @@
 						</ul>
 						<ul class="header_ul_right">
 							<li style="border: 0;">
-								<a href="http://auth.gulimall.com/login.html" th:if="${session.loginUser==null}" class="aa">你好，请登录</a>
+								<a href="http://auth.coemall.com/login.html" th:if="${session.loginUser==null}" class="aa">你好，请登录</a>
 								<a  th:if="${session.loginUser!=null}" class="aa" style="width: 100px">[[${session.loginUser.nickname}]]</a>
 							</li>
-							<li th:if="${session.loginUser==null}"><a href="http://auth.gulimall.com/reg.html" style="color: red;">免费注册</a> |</li>
+							<li th:if="${session.loginUser==null}"><a href="http://auth.coemall.com/reg.html" style="color: red;">免费注册</a> |</li>
 							<li><a href="/static/item/javascript:;" class="aa">我的订单</a> |</li>
 							<li class="jingdong" style="width:100px;"><a href="/static/item/javascript:;">我的谷粒商城</a><span class="glyphicon glyphicon-menu-down">|</span>
 								<ol class="jingdong_ol">
@@ -255,7 +255,7 @@
 				<div class="nav_min">
 					<div class="nav_top">
 						<div class="nav_top_one" style="width:auto;">
-							<a href="http://gulimall.com"><img src="/static/item/image/logo1.jpg"/></a></div>
+							<a href="http://coemall.com"><img src="/static/item/image/logo1.jpg"/></a></div>
 						<div class="nav_top_two"><input type="text"/><button>搜索</button></div>
 						<div class="nav_top_three"><a href="/static/item/../JD_Shop/One_JDshop.html">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
 							<div class="nav_top_three_1">
@@ -383,7 +383,7 @@
 
 							<span class="contact-sp">
 								<span class="contact-sp1">
-								gulimall
+								coemall
 							</span>
 							<span class="contact-sp2">
 								自营
@@ -1170,7 +1170,7 @@
 						<a href="/static/item/##">谷粒商城通信</a>
 					</dd>
 					<dd>
-						<a href="/static/item/##">谷粒商城gulimall+</a>
+						<a href="/static/item/##">谷粒商城coemall+</a>
 					</dd>
 				</dl>
 			</div>
@@ -1254,7 +1254,7 @@
 				<a href="/static/item/##">：4006561155 </a>
 			</p>
 			<p class="p1">
-				<a href="/static/item/##"> Copyright © 2004-2017 谷粒商城gulimall.com 版权所有</a>|
+				<a href="/static/item/##"> Copyright © 2004-2017 谷粒商城coemall.com 版权所有</a>|
 				<a href="/static/item/##"> 消费者维权热线：4006067733 经营证照</a>|
 			</p>
 			<p class="p1">
@@ -1306,7 +1306,7 @@
 		}
 
 		console.log(filterEle[0]);
-		location.href = "http://item.gulimall.com/"+filterEle[0]+".html";
+		location.href = "http://item.coemall.com/"+filterEle[0]+".html";
 
 		//4、跳转
 	});
@@ -1318,7 +1318,7 @@
 	$("#addToCartA").click(function(){
 		var  num = $("#numInput").val();
 		var skuId = $(this).attr("skuId");
-		location.href = "http://cart.gulimall.com/addToCart?skuId="+skuId+"&num="+num;
+		location.href = "http://cart.coemall.com/addToCart?skuId="+skuId+"&num="+num;
 		return false;
 	});
 
@@ -1328,7 +1328,7 @@
 			var killId =$(this).attr("sessionid")+"_"+ $(this).attr("skuid");
 			var key = $(this).attr("code");
 			var num = $("#numInput").val();
-			location.href = "http://seckill.gulimall.com/kill?killId="+killId+"&key="+key+"&num="+num;
+			location.href = "http://seckill.coemall.com/kill?killId="+killId+"&key="+key+"&num="+num;
 		}else {
 			alert("秒杀请先登录");
 		}

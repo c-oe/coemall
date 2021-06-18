@@ -39,4 +39,8 @@ spring:
         - id: coemall_host_route
           uri: lb://mall-product
           predicates:
-            - Host=**.coemall.com
+            - Host=coemall.com
+        - id: coemall_search_route
+          uri: lb://mall-search
+          predicates:
+            - Host=search.coemall.com
