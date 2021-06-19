@@ -6,5 +6,5 @@ package com.learn.coemall.search.constant;
  */
 public class EsConstant {
     public static final String PRODUCT_INDEX = "coe_product";//sku在es中的索引
-    public static final Integer PRODUCT_PAGESIZE = 2;
+    public static final Integer PRODUCT_PAGESIZE = 16;
 }

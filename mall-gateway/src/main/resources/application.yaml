@@ -2,6 +2,7 @@ spring:
   cloud:
     gateway:
       routes:
+
         - id: product_route
           uri: lb://mall-product
           predicates:
@@ -36,11 +37,18 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api(?<segment>.*),/renren-fast$\{segment}
+
         - id: coemall_host_route
           uri: lb://mall-product
           predicates:
-            - Host=coemall.com
+            - Host=coemall.com,item.coemall.com
+
         - id: coemall_search_route
           uri: lb://mall-search
           predicates:
             - Host=search.coemall.com
+
+        - id: mall_auth_route
+          uri: lb://mall-auth-server
+          predicates:
+            - Host=auth.coemall.com

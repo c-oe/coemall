@@ -3,10 +3,14 @@ package com.learn.coemall.search.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.learn.coemall.search.config.CoemallElasticSearchConfig;
 import com.learn.coemall.search.constant.EsConstant;
+import com.learn.coemall.search.feign.ProductFeignService;
 import com.learn.coemall.search.service.MallSearchService;
+import com.learn.coemall.search.vo.AttrResponseVo;
+import com.learn.coemall.search.vo.BrandVo;
 import com.learn.coemall.search.vo.SearchParam;
 import com.learn.coemall.search.vo.SearchResult;
 import com.learn.common.to.es.SkuEsModel;
+import com.learn.common.utils.R;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -26,6 +30,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +39,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +56,9 @@ public class MallSearchServiceImpl implements MallSearchService {
     @Qualifier("elasticsearchRestHighLevelClient")
     @Autowired
     private RestHighLevelClient client;
+
+    @Autowired
+    private ProductFeignService productFeignService;
 
     @Override
     public SearchResult search(SearchParam searchParam) {
@@ -71,7 +82,6 @@ public class MallSearchServiceImpl implements MallSearchService {
 
     /**
      * 分析响应数据并封装成所需格式
-     * @param searchResponse
      */
     private SearchResult buildSearchResult(SearchResponse searchResponse,SearchParam searchParam) {
 
@@ -84,6 +94,9 @@ public class MallSearchServiceImpl implements MallSearchService {
             for (SearchHit hit : hits.getHits()) {
                 String source = hit.getSourceAsString();
                 SkuEsModel esModel = JSON.parseObject(source, SkuEsModel.class);
+                if (StringUtils.hasLength(searchParam.getKeyword())){
+                    esModel.setSkuTitle(hit.getHighlightFields().get("skuTitle").getFragments()[0].string());
+                }
                 esModels.add(esModel);
             }
         }
@@ -120,10 +133,10 @@ public class MallSearchServiceImpl implements MallSearchService {
 
         //当前商品的所有分类信息
         ParsedLongTerms catalogAgg = searchResponse.getAggregations().get("catalog_agg");
-        List<SearchResult.catalogVo> catalogVos = new ArrayList<>();
+        List<SearchResult.CatalogVo> catalogVos = new ArrayList<>();
 
         for (Terms.Bucket bucket : catalogAgg.getBuckets()) {
-            SearchResult.catalogVo catalogVo = new SearchResult.catalogVo();
+            SearchResult.CatalogVo catalogVo = new SearchResult.CatalogVo();
             catalogVo.setCatalogId(bucket.getKeyAsNumber().longValue());
             ParsedStringTerms catalogNameAgg = bucket.getAggregations().get("catalog_name_agg");
             catalogVo.setCatalogName(catalogNameAgg.getBuckets().get(0).getKeyAsString());
@@ -143,12 +156,81 @@ public class MallSearchServiceImpl implements MallSearchService {
         int totalPage = (int) total%EsConstant.PRODUCT_PAGESIZE == 0 ? (int)total%EsConstant.PRODUCT_PAGESIZE : ((int)total%EsConstant.PRODUCT_PAGESIZE + 1);
         result.setTotalPages(totalPage);
 
+        List<Integer> pageNavs = new ArrayList<>();
+        for (int i = 0; i < totalPage; i++) {
+            pageNavs.add(i);
+        }
+        result.setPageNavs(pageNavs);
+
+
+        //属性面包屑导航
+        if (!CollectionUtils.isEmpty(searchParam.getAttrs())){
+            List<SearchResult.NavVo> collect = searchParam.getAttrs().stream().map(attr -> {
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+                String[] s = attr.split("_");
+                navVo.setNavValue(s[1]);
+                R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                result.getAttrIds().add(Long.parseLong(s[0]));
+                if (r.getCode() == 0){
+                    AttrResponseVo data = (AttrResponseVo) r.get("attr");
+                    navVo.setNavName(data.getAttrName());
+                }else {
+                    navVo.setNavName(s[0]);
+                }
+
+                //取消面包屑后跳转
+                String replace = getReplace(searchParam, attr,"attrs");
+                navVo.setLink("http://search.coemall.com/list.html?" + replace);
+
+                return navVo;
+            }).collect(Collectors.toList());
+
+
+
+
+            result.setNavs(collect);
+        }
+
+        //品牌面包屑导航
+        if (!CollectionUtils.isEmpty(searchParam.getBrandId())){
+            List<SearchResult.NavVo> navs = result.getNavs();
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+
+            navVo.setNavName("品牌");
+            R r = productFeignService.brandInfo(searchParam.getBrandId());
+            if (r.getCode() == 0){
+                List<BrandVo> brand = (List<BrandVo>) r.get("brand");
+                StringBuilder builder = new StringBuilder();
+                String replace = null;
+                for (BrandVo brandVo : brand) {
+                    builder.append(brandVo.getBrandName() + ";");
+                    replace = getReplace(searchParam, brandVo.getBrandId() + "","brandId");
+                }
+                navVo.setNavValue(builder.toString());
+                navVo.setLink("http://search.coemall.com/list.html?" + replace);
+            }
+            navs.add(navVo);
+            result.setNavs(navs);
+        }
+        //分类面包屑导航
+
         return result;
+    }
+
+    private String getReplace(SearchParam searchParam, String value,String key) {
+        String encode = null;
+        try {
+            encode = URLEncoder.encode(value, "UTF-8");
+            encode = encode.replace("+","%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String replace = searchParam.get_queryString().replace("&" + key + "=" + encode, "");
+        return replace;
     }
 
     /**
      * 准备检索请求
-     * @param searchParam
      */
     private SearchRequest buildSearchRequest(SearchParam searchParam) {
 

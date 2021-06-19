@@ -2,6 +2,7 @@ package com.learn.coemall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learn.coemall.product.vo.AttrGroupWithAttrsVo;
+import com.learn.coemall.product.vo.SpuItemAttrGroupVo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.product.entity.AttrGroupEntity;
 
@@ -22,5 +23,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params, Long catelogId);
 
     List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
+
+    List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId);
 }
 

@@ -17,11 +17,12 @@ public class SearchParam {
 
     private String sort;//排序
 
-    private Integer hasStock = 1;//有货
+    private Integer hasStock;//有货
     private String skuPrice;//价格区间
     private List<Long> brandId;//品牌ID
     private List<String> attrs;//属性
 
     private Integer pageNum = 1;//页码
 
+    private String _queryString;//原生查询条件
 }
