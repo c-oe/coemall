@@ -1,5 +1,8 @@
 server:
   port: 14000
+  servlet:
+    session:
+      timeout: 30m
 spring:
   application:
     name: mall-auth-server
@@ -12,3 +15,5 @@ spring:
   redis:
     host: 192.168.80.133
     port: 6379
+  session:
+    store-type: redis

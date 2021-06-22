@@ -26,7 +26,6 @@ public class SkuSaleAttrValueController {
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
-
     @GetMapping("/stringlist/{skuId}")
     public List<String> getSkuSaleAttrValues(@PathVariable("skuId") Long skuId){
 

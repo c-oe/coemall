@@ -1,7 +1,7 @@
 package com.learn.coemall.thirdparty;
 
 import com.aliyun.oss.OSSClient;
-import com.learn.coemall.thirdparty.util.HttpUtils;
+import com.learn.common.utils.HttpUtils;
 import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

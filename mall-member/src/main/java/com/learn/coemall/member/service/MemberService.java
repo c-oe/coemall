@@ -5,6 +5,7 @@ import com.learn.coemall.member.exception.PhoneExsitException;
 import com.learn.coemall.member.exception.UsernameExistException;
 import com.learn.coemall.member.vo.MemberLoginVo;
 import com.learn.coemall.member.vo.MemberRegistVo;
+import com.learn.coemall.member.vo.SocialUser;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.member.entity.MemberEntity;
 
@@ -28,5 +29,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkUserNameUnique(String userName) throws UsernameExistException;
 
     MemberEntity login(MemberLoginVo vo);
+
+    MemberEntity login(SocialUser user) throws Exception;
 }
 

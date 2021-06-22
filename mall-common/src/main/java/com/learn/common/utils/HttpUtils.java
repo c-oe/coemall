@@ -1,9 +1,5 @@
-package com.learn.coemall.thirdparty.util;
+package com.learn.common.utils;
 
-/**
- * @author coffee
- * @since 2021-06-19 14:46
- */
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
@@ -35,6 +31,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+/**
+ * @author coffee
+ * @since 2021-06-19 14:46
+ */
 public class HttpUtils {
 
     /**

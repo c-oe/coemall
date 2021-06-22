@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-public class MallWareApplication {
+public class  MallWareApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MallWareApplication.class, args);

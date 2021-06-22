@@ -1,5 +1,6 @@
 package com.learn.coemall.authserver.fegin;
 
+import com.learn.coemall.authserver.vo.SocialUser;
 import com.learn.coemall.authserver.vo.UserLoginVo;
 import com.learn.coemall.authserver.vo.UserRegistVo;
 import com.learn.common.utils.R;
@@ -19,4 +20,7 @@ public interface MemberFeignService {
 
     @PostMapping("/member/member/login")
     R login(@RequestBody UserLoginVo vo);
+
+    @PostMapping("/member/member/oauth2/login")
+     R oauthLogin(@RequestBody SocialUser user) throws Exception;
 }

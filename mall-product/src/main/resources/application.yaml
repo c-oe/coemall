@@ -44,6 +44,8 @@ spring:
       use-key-prefix: true
       cache-null-values: true #是否缓存控制，防止缓存穿透
 
+  session:
+    store-type: redis
 logging:
   level:
     com.learn.coemall: debug

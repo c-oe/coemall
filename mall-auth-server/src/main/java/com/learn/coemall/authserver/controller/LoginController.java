@@ -7,6 +7,7 @@ import com.learn.coemall.authserver.vo.UserRegistVo;
 import com.learn.common.constant.AuthServerConstant;
 import com.learn.common.exception.BizCodeEnum;
 import com.learn.common.utils.R;
+import com.learn.common.vo.MemberRespVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,11 +111,23 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession session){
+        Object attribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+        if (attribute == null){
+            return "login";
+        }else {
+            return "redirect:/http://coemall.com";
+        }
+    }
+
     @PostMapping("/login")
-    public String login(UserLoginVo vo,RedirectAttributes redirectAttributes){
+    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes, HttpSession session){
         //远程登录
         R login = memberFeignService.login(vo);
         if (login.getCode() == 0){
+            MemberRespVo data = (MemberRespVo) login.get("data");
+            session.setAttribute(AuthServerConstant.LOGIN_USER,data);
             return "redirect:/http://coemall.com";
         }else {
             Map<String, String> errors = new HashMap<>();

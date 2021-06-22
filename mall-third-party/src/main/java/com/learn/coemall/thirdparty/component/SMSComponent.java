@@ -1,6 +1,6 @@
 package com.learn.coemall.thirdparty.component;
 
-import com.learn.coemall.thirdparty.util.HttpUtils;
+import com.learn.common.utils.HttpUtils;
 import lombok.Data;
 import org.apache.http.HttpResponse;
 import org.springframework.boot.context.properties.ConfigurationProperties;
