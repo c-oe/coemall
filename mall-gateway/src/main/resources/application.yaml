@@ -57,3 +57,8 @@ spring:
           uri: lb://mall-cart
           predicates:
             - Host=cart.coemall.com
+
+        - id: mall_order_route
+          uri: lb://mall-order
+          predicates:
+            - Host=order.coemall.com

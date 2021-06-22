@@ -1,6 +1,7 @@
 package com.learn.coemall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learn.coemall.ware.vo.FareVo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.ware.entity.WareInfoEntity;
 
@@ -16,5 +17,11 @@ import java.util.Map;
 public interface WareInfoService extends IService<WareInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 根据用户收货地址计算运费
+     * @return
+     */
+    FareVo getFare(Long addrId);
 }
 

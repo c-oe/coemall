@@ -3,6 +3,7 @@ package com.learn.coemall.mallcart.service;
 import com.learn.coemall.mallcart.vo.Cart;
 import com.learn.coemall.mallcart.vo.CartItem;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -45,4 +46,10 @@ public interface CartService {
      * 删除购物项
      */
     void deleteItem(Long skuId);
+
+    /**
+     * 获取用户购物车里的购物项
+     */
+    List<CartItem> getUserCartItems();
+
 }

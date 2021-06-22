@@ -23,6 +23,15 @@ spring:
     publisher-returns: true
     template:
       mandatory: true
+    listener:
+      direct:
+        acknowledge-mode: manual
+  thymeleaf:
+    cache: false
+  session:
+    store-type: redis
+  redis:
+    host: 192.168.80.133
 
   application:
     name: mall-order

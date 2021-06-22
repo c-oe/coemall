@@ -1,14 +1,11 @@
 package com.learn.coemall.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.learn.coemall.member.entity.MemberReceiveAddressEntity;
 import com.learn.coemall.member.service.MemberReceiveAddressService;
@@ -28,6 +25,11 @@ import com.learn.common.utils.R;
 public class MemberReceiveAddressController {
     @Autowired
     private MemberReceiveAddressService memberReceiveAddressService;
+
+    @GetMapping("/member/memberreceiveaddress/{memeberId}/addresses")
+    public List<MemberReceiveAddressEntity> getAddress(@PathVariable("memeberId") Long memberId){
+        return memberReceiveAddressService.getAddress(memberId);
+    }
 
     /**
      * 列表

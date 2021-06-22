@@ -1,7 +1,13 @@
 package com.learn.coemall.ware.service.impl;
 
+import com.learn.coemall.ware.feign.MemberFeignService;
+import com.learn.coemall.ware.vo.FareVo;
+import com.learn.coemall.ware.vo.MemberAddressVo;
+import com.learn.common.utils.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -19,6 +25,9 @@ import org.springframework.util.StringUtils;
 @Service("wareInfoService")
 public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity> implements WareInfoService {
 
+    @Autowired
+    private MemberFeignService memberFeignService;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper<WareInfoEntity> queryWrapper = new QueryWrapper<>();
@@ -34,6 +43,23 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
         IPage<WareInfoEntity> page = this.page(new Query<WareInfoEntity>().getPage(params), queryWrapper);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public FareVo getFare(Long addrId) {
+
+        FareVo fareVo = new FareVo();
+        R r = memberFeignService.addrInfo(addrId);
+        MemberAddressVo data = (MemberAddressVo) r.get("memberReceiveAddress");
+        if (data != null){
+            String phone = data.getPhone();
+            String substring = phone.substring(phone.length() - 1, phone.length());
+            BigDecimal bigDecimal = new BigDecimal(substring);
+            fareVo.setAddress(data);
+            fareVo.setFare(bigDecimal);
+            return fareVo;
+        }
+        return null;
     }
 
 }

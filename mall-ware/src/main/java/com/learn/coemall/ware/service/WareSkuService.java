@@ -1,6 +1,7 @@
 package com.learn.coemall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learn.coemall.ware.vo.WareSkuLockVo;
 import com.learn.common.to.SkuHasStockTo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.ware.entity.WareSkuEntity;
@@ -22,5 +23,11 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     void addStock(Long skuId, Long wareId, Integer skuNum);
 
     List<SkuHasStockTo> getSkuHasStock(List<Long> skuIds);
+
+    /**
+     * 为某个订单锁库存
+     * @return
+     */
+    Boolean orderLockStock(WareSkuLockVo vo);
 }
 

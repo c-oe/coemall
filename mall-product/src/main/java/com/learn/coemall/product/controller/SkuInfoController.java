@@ -1,5 +1,6 @@
 package com.learn.coemall.product.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,13 @@ import com.learn.common.utils.R;
 public class SkuInfoController {
     @Autowired
     private SkuInfoService skuInfoService;
+
+    @GetMapping("/{skuId}/price")
+    public R getPrice(@PathVariable("skuId")Long skuId){
+        BigDecimal price = skuInfoService.getById(skuId).getPrice();
+        return R.ok().put("data",price);
+    }
+
     /**
      * 列表
      */
