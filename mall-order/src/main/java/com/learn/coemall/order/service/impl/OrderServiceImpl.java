@@ -14,8 +14,11 @@ import com.learn.coemall.order.service.OrderItemService;
 import com.learn.coemall.order.to.OrderCreateTo;
 import com.learn.coemall.order.vo.*;
 import com.learn.common.exception.NoStockException;
+import com.learn.common.to.mq.OrderTo;
 import com.learn.common.utils.R;
 import com.learn.common.vo.MemberRespVo;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -71,6 +74,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     @Autowired
     private OrderItemService orderItemService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<OrderEntity> page = this.page(
@@ -121,6 +127,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
+//    @GlobalTransactional
     @Transactional(rollbackFor = Exception.class)
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
@@ -157,15 +164,44 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 R r = wmsFeignService.orderLockStock(wareSkuLockVo);
                 if (r.getCode() == 0){
                     response.setOrder(order.getOrder());
+                    //创建成功给MQ发送消息
+                    rabbitTemplate.convertAndSend("order-event-exchange","order.create.order",order.getOrder());
+
                     return response;
                 }else {
-                    response.setCode(3);
-                    return response;
+                    String msg = (String) r.get("msg");
+                    throw new NoStockException(msg);
                 }
             }else {
                 response.setCode(2);
                 return response;
             }
+        }
+    }
+
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        return getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+    }
+
+    @Override
+    public void closeOrder(OrderEntity entity) {
+        //查询当前订单最新状态
+        OrderEntity orderEntity = getById(entity.getId());
+        if (orderEntity.getStatus().equals(OrderStatusEnum.CREATE_NEW.getCode())){
+            //关单
+            OrderEntity update = new OrderEntity();
+            update.setId(entity.getId());
+            update.setStatus(OrderStatusEnum.CANCLED.getCode());
+            updateById(update);
+            OrderTo orderTo = new OrderTo();
+            BeanUtils.copyProperties(orderEntity,orderTo);
+            try {
+                rabbitTemplate.convertAndSend("order-event-exchange","order.release.other",orderTo);
+            }catch (Exception e){
+
+            }
+
         }
     }
 

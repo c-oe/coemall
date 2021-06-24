@@ -3,9 +3,14 @@ package com.learn.coemall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learn.coemall.ware.vo.WareSkuLockVo;
 import com.learn.common.to.SkuHasStockTo;
+import com.learn.common.to.mq.OrderTo;
+import com.learn.common.to.mq.StockLockedTo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.ware.entity.WareSkuEntity;
+import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Message;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +31,11 @@ public interface WareSkuService extends IService<WareSkuEntity> {
 
     /**
      * 为某个订单锁库存
-     * @return
      */
     Boolean orderLockStock(WareSkuLockVo vo);
+
+    void handleStockLockedRelease(StockLockedTo to);
+
+    void handleOrderCloseRelease(OrderTo orderTo);
 }
 

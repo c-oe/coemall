@@ -11,6 +11,16 @@ spring:
     password: root
     url: jdbc:mysql://192.168.80.133:3306/mall_wms
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: 192.168.80.133
+    port: 5672
+#    publisher-confirm-type: correlated
+#    publisher-returns: true
+#    template:
+#      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual
   cloud:
     nacos:
       discovery:

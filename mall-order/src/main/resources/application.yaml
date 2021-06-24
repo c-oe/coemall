@@ -24,7 +24,7 @@ spring:
     template:
       mandatory: true
     listener:
-      direct:
+      simple:
         acknowledge-mode: manual
   thymeleaf:
     cache: false
