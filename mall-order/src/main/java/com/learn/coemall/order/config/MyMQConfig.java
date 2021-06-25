@@ -10,10 +10,6 @@ import java.util.Map;
 @Configuration
 public class MyMQConfig {
 
-
-
-    //@Bean Binding，Queue，Exchange
-
     /**
      * 容器中的 Binding，Queue，Exchange 都会自动创建（RabbitMQ没有的情况）
      * RabbitMQ 只要有。@Bean声明属性发生变化也不会覆盖
@@ -30,33 +26,26 @@ public class MyMQConfig {
         arguments.put("x-dead-letter-exchange","order-event-exchange");
         arguments.put("x-dead-letter-routing-key","order.release.order");
         arguments.put("x-message-ttl",60000);
-        //String name, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments
-        Queue queue = new Queue("order.delay.queue", true, false, false,arguments);
-        return queue;
+        return new Queue("order.delay.queue", true, false, false,arguments);
     }
 
     @Bean
     public Queue orderReleaseOrderQueue() {
-        Queue queue = new Queue("order.release.order.queue", true, false, false);
-        return queue;
+        return new Queue("order.release.order.queue", true, false, false);
     }
 
     @Bean
     public Exchange orderEventExchange() {
-        //String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
        return new TopicExchange("order-event-exchange",true,false);
     }
 
     @Bean
     public Binding orderCreateOrderBinding() {
-        //String destination, DestinationType destinationType, String exchange, String routingKey,
-        //			Map<String, Object> arguments
         return new Binding("order.delay.queue",
                 Binding.DestinationType.QUEUE,
                 "order-event-exchange",
                 "order.create.order",
                 null);
-
     }
 
     @Bean
@@ -67,7 +56,6 @@ public class MyMQConfig {
                 "order.release.order",
                 null);
     }
-
 
     /**
      * 订单释放直接和库存释放进行绑定
@@ -81,19 +69,13 @@ public class MyMQConfig {
                 null);
     }
 
-
     @Bean
     public Queue orderSeckillOrderQueue(){
-        //String name, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments
         return new Queue("order.seckill.order.queue",true,false,false);
     }
 
     @Bean
     public Binding orderSeckillOrderQueueBinding(){
-        /**
-         * String destination, DestinationType destinationType, String exchange, String routingKey,
-         * 			Map<String, Object> arguments
-         */
         return new Binding("order.seckill.order.queue",
                 Binding.DestinationType.QUEUE,
                 "order-event-exchange",

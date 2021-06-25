@@ -1,9 +1,8 @@
 package com.learn.coemall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learn.coemall.order.vo.OrderConfirmVo;
-import com.learn.coemall.order.vo.OrderSubmitVo;
-import com.learn.coemall.order.vo.SubmitOrderResponseVo;
+import com.learn.coemall.order.vo.*;
+import com.learn.common.to.mq.SeckillOrderTo;
 import com.learn.common.utils.PageUtils;
 import com.learn.coemall.order.entity.OrderEntity;
 
@@ -28,5 +27,16 @@ public interface OrderService extends IService<OrderEntity> {
     OrderEntity getOrderByOrderSn(String orderSn);
 
     void closeOrder(OrderEntity entity);
+
+    /**
+     * 获取当前订单的支付信息
+     */
+    PayVo getOrderPay(String orderSn);
+
+    PageUtils queryListWithItem(Map<String, Object> params);
+
+    String handlePayResult(PayAsyncVo vo);
+
+    void createSeckillOrder(SeckillOrderTo seckillOrder);
 }
 

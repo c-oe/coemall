@@ -13,6 +13,7 @@ import com.learn.common.utils.Query;
 import com.learn.coemall.coupon.dao.SeckillSkuRelationDao;
 import com.learn.coemall.coupon.entity.SeckillSkuRelationEntity;
 import com.learn.coemall.coupon.service.SeckillSkuRelationService;
+import org.springframework.util.StringUtils;
 
 
 @Service("seckillSkuRelationService")
@@ -20,10 +21,15 @@ public class SeckillSkuRelationServiceImpl extends ServiceImpl<SeckillSkuRelatio
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        QueryWrapper<SeckillSkuRelationEntity> queryWrapper = new QueryWrapper<>();
+        String promotionSessionId = (String) params.get("promotionSessionId");
+        if (StringUtils.hasLength(promotionSessionId)){
+            queryWrapper.eq("promotion_session_id",promotionSessionId);
+        }
+
         IPage<SeckillSkuRelationEntity> page = this.page(
                 new Query<SeckillSkuRelationEntity>().getPage(params),
-                new QueryWrapper<SeckillSkuRelationEntity>()
-        );
+                queryWrapper);
 
         return new PageUtils(page);
     }

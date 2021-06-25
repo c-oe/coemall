@@ -1,7 +1,10 @@
 package com.learn.coemall.product.service.impl;
 
+import com.learn.coemall.product.feign.SeckillFeignService;
 import com.learn.coemall.product.service.*;
+import com.learn.coemall.product.vo.SecKillInfoVo;
 import com.learn.coemall.product.vo.SkuItemVo;
+import com.learn.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Autowired
     private ThreadPoolExecutor executor;
+
+    @Autowired
+    private SeckillFeignService seckillFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -99,35 +105,44 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public SkuItemVo item(Long skuId) throws ExecutionException, InterruptedException {
         SkuItemVo vo = new SkuItemVo();
 
+        //sku基本信息获取
         CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
-            //sku基本信息获取
             SkuInfoEntity info = getById(skuId);
             vo.setInfo(info);
             return info;
         }, executor);
 
+        //获取spu销售属性组合
         CompletableFuture<Void> saleAttrFuture = infoFuture.thenAcceptAsync(res -> {
-            //获取spu销售属性组合
             vo.setSaleAttr(skuSaleAttrValueService.getSaleAttrsBySpuId(res.getSpuId()));
         }, executor);
 
+        //获取spu介绍
         CompletableFuture<Void> descFuture = infoFuture.thenAcceptAsync(res -> {
-            //获取spu介绍
             vo.setDesp(spuInfoDescService.getById(res.getSpuId()));
         }, executor);
 
+        //获取spu规格参数信息
         CompletableFuture<Void> baseAttrFuture = infoFuture.thenAcceptAsync(res -> {
-            //获取spu规格参数信息
             vo.setGroupAttrs(attrGroupService.getAttrGroupWithAttrsBySpuId(res.getSpuId(), res.getCatalogId()));
         }, executor);
 
+        //sku图片信息
         CompletableFuture<Void> imageFuture = CompletableFuture.runAsync(() -> {
-            //sku图片信息
             vo.setImages(imagesService.getImagesBySkuId(skuId));
         }, executor);
 
+        //是否参与秒杀优惠
+        CompletableFuture<Void> secKillFuture = CompletableFuture.runAsync(() -> {
+            R r = seckillFeignService.getSkuSeckillInfo(skuId);
+            if (r.getCode() == 0) {
+                SecKillInfoVo data = (SecKillInfoVo) r.get("data");
+                vo.setSecKillInfo(data);
+            }
+        }, executor);
+
         //等待所有任务都完成
-        CompletableFuture.allOf(saleAttrFuture,descFuture,baseAttrFuture,imageFuture).get();
+        CompletableFuture.allOf(saleAttrFuture,descFuture,baseAttrFuture,imageFuture,secKillFuture).get();
 
         return vo;
     }

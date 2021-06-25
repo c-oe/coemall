@@ -10,6 +10,13 @@ spring:
           filters:
             - RewritePath=/api(?<segment>.*),$\{segment}
 
+        - id: coupon_route
+          uri: lb://mall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api(?<segment>.*),$\{segment}
+
         - id: ware_route
           uri: lb://mall-ware
           predicates:
@@ -61,4 +68,13 @@ spring:
         - id: mall_order_route
           uri: lb://mall-order
           predicates:
-            - Host=order.coemall.com
+            - Host=order.coemall.
+
+        - id: mall_member_route
+          uri: lb://mall-member
+          predicates:
+            - Host=member.coemall.com
+        - id: mall_seckill_route
+          uri: lb://mall-seckill
+          predicates:
+            - Host=seckill.coemall.com

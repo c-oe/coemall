@@ -1,8 +1,7 @@
 package com.learn.coemall.order.listener;
 
-import com.atguigu.common.to.mq.SeckillOrderTo;
-import com.atguigu.gulimall.order.entity.OrderEntity;
-import com.atguigu.gulimall.order.service.OrderService;
+import com.learn.coemall.order.service.OrderService;
+import com.learn.common.to.mq.SeckillOrderTo;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

@@ -14,5 +14,4 @@ public class SeckillOrderTo {
     private BigDecimal seckillPrice; //秒杀价格
     private Integer num; //购买数量
     private Long memberId;//会员id；
-
 }
